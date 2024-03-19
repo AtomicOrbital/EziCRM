@@ -2,7 +2,8 @@ package com.example.crm.entity;
 
 
 import com.example.crm.entity.Id.UserGroupRelationsId;
-import jakarta.persistence.*;
+import javax.persistence.*;
+import java.util.List;
 
 import java.io.Serializable;
 
@@ -13,10 +14,12 @@ public class UserGroupRelationsEntity implements Serializable {
 
     @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
     private UserEntity userEntity;
 
     @MapsId("groupId")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupid")
     private UserGroupsEntity userGroupsEntity;
 
     public UserGroupRelationsEntity() {

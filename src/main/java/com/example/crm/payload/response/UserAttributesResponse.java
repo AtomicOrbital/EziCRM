@@ -1,60 +1,81 @@
 package com.example.crm.payload.response;
 
 public class UserAttributesResponse {
-    private Long attributeid;
-    private Long userid;
-    private Long attributegroupid;
-    private String name;
-    private String value;
+    private Long attributeId;
+    private Long userId;
+    private String userName;
+    private Long attributeGroupId;
+    private String attributeName;
+    private String attributeValue;
+    private String groupName;
+
 
     public UserAttributesResponse() {
     }
 
-    public UserAttributesResponse(Long attributeid, Long userid, Long attributegroupid, String name, String value) {
-        this.attributeid = attributeid;
-        this.userid = userid;
-        this.attributegroupid = attributegroupid;
-        this.name = name;
-        this.value = value;
+    public UserAttributesResponse(Long attributeId, Long userId, String userName, Long attributeGroupId, String attributeName, String attributeValue, String groupName) {
+        this.attributeId = attributeId;
+        this.userId = userId;
+        this.userName = userName;
+        this.attributeGroupId = attributeGroupId;
+        this.attributeName = attributeName;
+        this.attributeValue = attributeValue;
+        this.groupName = groupName;
     }
 
-    public Long getAttributeid() {
-        return attributeid;
+    public Long getAttributeId() {
+        return attributeId;
     }
 
-    public void setAttributeid(Long attributeid) {
-        this.attributeid = attributeid;
+    public void setAttributeId(Long attributeId) {
+        this.attributeId = attributeId;
     }
 
-    public Long getUserid() {
-        return userid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserid(Long userid) {
-        this.userid = userid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Long getAttributegroupid() {
-        return attributegroupid;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAttributegroupid(Long attributegroupid) {
-        this.attributegroupid = attributegroupid;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getName() {
-        return name;
+    public Long getAttributeGroupId() {
+        return attributeGroupId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAttributeGroupId(Long attributeGroupId) {
+        this.attributeGroupId = attributeGroupId;
     }
 
-    public String getValue() {
-        return value;
+    public String getAttributeName() {
+        return attributeName;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
+
+    public String getAttributeValue() {
+        return attributeValue;
+    }
+
+    public void setAttributeValue(String attributeValue) {
+        this.attributeValue = attributeValue;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

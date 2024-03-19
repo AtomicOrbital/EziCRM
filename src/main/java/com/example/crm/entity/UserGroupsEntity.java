@@ -1,7 +1,8 @@
 package com.example.crm.entity;
 
 import com.example.crm.entity.Id.UserGroupRelationsId;
-import jakarta.persistence.*;
+import javax.persistence.*;
+import java.util.List;
 
 import java.util.*;
 
@@ -9,22 +10,22 @@ import java.util.*;
 public class UserGroupsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "groupID")
+    @Column(name = "groupid")
     private Long groupId;
 
     @Column(name = "name", nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "userGroupsEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserGroupRelationsEntity> userGroupRelations;
+    private List<UserGroupRelationsEntity> userGroupRelationsEntities;
 
     public UserGroupsEntity() {
     }
 
-    public UserGroupsEntity(Long groupId, String name, List<UserGroupRelationsEntity> userGroupRelations) {
+    public UserGroupsEntity(Long groupId, String name, List<UserGroupRelationsEntity> userGroupRelationsEntities) {
         this.groupId = groupId;
         this.name = name;
-        this.userGroupRelations = userGroupRelations;
+        this.userGroupRelationsEntities = userGroupRelationsEntities;
     }
 
     public Long getGroupId() {
@@ -43,11 +44,11 @@ public class UserGroupsEntity {
         this.name = name;
     }
 
-    public List<UserGroupRelationsEntity> getUserGroupRelations() {
-        return userGroupRelations;
+    public List<UserGroupRelationsEntity> getUserGroupRelationsEntities() {
+        return userGroupRelationsEntities;
     }
 
-    public void setUserGroupRelations(List<UserGroupRelationsEntity> userGroupRelations) {
-        this.userGroupRelations = userGroupRelations;
+    public void setUserGroupRelationsEntities(List<UserGroupRelationsEntity> userGroupRelationsEntities) {
+        this.userGroupRelationsEntities = userGroupRelationsEntities;
     }
 }

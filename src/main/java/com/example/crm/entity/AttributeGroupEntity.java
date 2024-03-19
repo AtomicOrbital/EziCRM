@@ -1,9 +1,7 @@
 package com.example.crm.entity;
-
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "attributegroups")

@@ -1,16 +1,16 @@
 package com.example.crm.entity.Id;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import javax.persistence.*;
+import java.util.List;
 
 import java.io.Serializable;
 
 @Embeddable
 public class UserGroupRelationsId implements Serializable {
-    @Column(name = "UserID")
+    @Column(name = "userid")
     private Long userId;
 
-    @Column(name = "GroupID")
+    @Column(name = "groupid")
     private Long groupId;
 
     public UserGroupRelationsId() {

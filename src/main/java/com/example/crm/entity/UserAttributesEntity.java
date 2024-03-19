@@ -1,6 +1,7 @@
 package com.example.crm.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "userattributes")

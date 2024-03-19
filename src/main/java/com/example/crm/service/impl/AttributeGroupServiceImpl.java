@@ -5,10 +5,10 @@ import com.example.crm.payload.request.AttributeGroupRequest;
 import com.example.crm.payload.response.AttributeGroupResponse;
 import com.example.crm.repository.AttributeGroupRepository;
 import com.example.crm.service.AttributeGroupService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 

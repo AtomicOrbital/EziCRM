@@ -5,6 +5,6 @@ import com.example.crm.payload.response.UserAttributesResponse;
 
 import java.util.List;
 
-public interface AttributeSearch {
-    List<UserAttributesResponse> searchAttributes(AttributeSearchRequest searchRequest)
+public interface AttributeSearchService {
+    List<UserAttributesResponse> searchAttributes(Long groupId, String name);
 }

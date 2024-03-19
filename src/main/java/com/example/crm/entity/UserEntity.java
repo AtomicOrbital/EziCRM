@@ -1,6 +1,8 @@
 package com.example.crm.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 import java.util.*;
 
@@ -18,16 +20,11 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role = Role.Admin;
-
-    @Column(name = "fullname")
-    private String fullName;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "date_of_birth")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "email")
     private String email;
@@ -43,25 +40,29 @@ public class UserEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "id_role")
+    private RoleEntity role;
+
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserGroupRelationsEntity> userGroupRelations;
+    private List<UserGroupRelationsEntity> userGroupsGroupRelationsEntities;
 
     public UserEntity() {
 
     }
 
-    public UserEntity(Long userId, String username, String password, Role role, String fullName, Date dateOfBirth, String email, String phone, Date createdAt, Date updatedAt, List<UserGroupRelationsEntity> userGroupRelations) {
+    public UserEntity(Long userId, String username, String password, String address, LocalDate dateOfBirth, String email, String phone, Date createdAt, Date updatedAt, RoleEntity role, List<UserGroupRelationsEntity> userGroupsGroupRelationsEntities) {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        this.role = role;
-        this.fullName = fullName;
+        this.address = address;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phone = phone;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.userGroupRelations = userGroupRelations;
+        this.role = role;
+        this.userGroupsGroupRelationsEntities = userGroupsGroupRelationsEntities;
     }
 
     public Long getUserId() {
@@ -88,27 +89,19 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public String getAddress() {
+        return address;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -144,15 +137,22 @@ public class UserEntity {
         this.updatedAt = updatedAt;
     }
 
-    public List<UserGroupRelationsEntity> getUserGroupRelations() {
-        return userGroupRelations;
+    public List<UserGroupRelationsEntity> getUserGroupsGroupRelationsEntities() {
+        return userGroupsGroupRelationsEntities;
     }
 
-    public void setUserGroupRelations(List<UserGroupRelationsEntity> userGroupRelations) {
-        this.userGroupRelations = userGroupRelations;
+    public void setUserGroupsGroupRelationsEntities(List<UserGroupRelationsEntity> userGroupsGroupRelationsEntities) {
+        this.userGroupsGroupRelationsEntities = userGroupsGroupRelationsEntities;
     }
+
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
+    }
+
+
 }
 
-enum Role {
-    Admin, User
-}

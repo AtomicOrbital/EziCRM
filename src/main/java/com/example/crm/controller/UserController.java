@@ -4,19 +4,25 @@ import com.example.crm.payload.BaseResponse;
 import com.example.crm.payload.request.UserRequest;
 import com.example.crm.payload.response.UserResponse;
 import com.example.crm.service.UserService;
+import com.example.crm.service.impl.ExcelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ExcelDataService excelDataService;
     @GetMapping
     public ResponseEntity<BaseResponse> getAllUsers(){
         BaseResponse baseResponse = new BaseResponse();
@@ -38,6 +44,7 @@ public class UserController {
         BaseResponse baseResponse = new BaseResponse();
         try {
             UserResponse userResponse = userService.getUserById(id);
+            baseResponse.setStatus(200);
             baseResponse.setMessage("Users fetch successfully");
             baseResponse.setData(userResponse);
             return ResponseEntity.ok(baseResponse);
@@ -46,6 +53,19 @@ public class UserController {
             baseResponse.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(baseResponse);
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponse>> searchUsers(
+        @RequestParam(value = "username", required = false) String username,
+        @RequestParam(value = "address", required = false) String address,
+        @RequestParam(value = "email", required = false) String email,
+        @RequestParam(value = "phone", required = false) String phone,
+        @RequestParam(value = "minAge", required = false) Integer minAge,
+        @RequestParam(value = "maxAge", required = false) Integer maxAge
+    ){
+        List<UserResponse> users = userService.searchUsers(username, address, email, phone, minAge, maxAge);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping
@@ -61,6 +81,17 @@ public class UserController {
             baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             baseResponse.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(baseResponse);
+        }
+    }
+
+    @PostMapping("/import-excel")
+    public ResponseEntity<?> importUsersFromExcel(@RequestParam("file") MultipartFile file){
+        try {
+            excelDataService.saveUserToDatabase(file);
+            return ResponseEntity.ok().body("File has been uploaded and data stored successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("An error occurred while processing the file.");
         }
     }
 

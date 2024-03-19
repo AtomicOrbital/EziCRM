@@ -1,6 +1,8 @@
 package com.example.crm.controller;
 
 import com.example.crm.payload.BaseResponse;
+import com.example.crm.payload.request.AddAttributeForMultipleUsersRequest;
+import com.example.crm.payload.request.MultipleUserAttributesRequest;
 import com.example.crm.payload.request.UpdateGroupAttributeRequest;
 import com.example.crm.payload.request.UserAttributesRequest;
 import com.example.crm.payload.response.UserAttributesResponse;
@@ -8,12 +10,15 @@ import com.example.crm.service.UserAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class UserAttributesController {
     @Autowired
     private UserAttributeService userAttributeService;
@@ -49,17 +54,38 @@ public class UserAttributesController {
         }
     }
 
-    @PostMapping("/attribute-groups/{attributeGroupId}/users/{userId}/attributes")
+    @PostMapping("/attribute-groups/attributes/multiple/{attributeGroupId}")
+    public ResponseEntity<BaseResponse> createMultipleGroupAttributes(
+            @PathVariable Long attributeGroupId,
+            @RequestBody MultipleUserAttributesRequest request
+            ){
+        List<UserAttributesResponse> responses = userAttributeService.createMultipleGroupAttributes(attributeGroupId, request);
+        return ResponseEntity.ok(new BaseResponse(200, "Successfully added multiple attributes to the group.", responses));
+    }
+
+    @PostMapping("/attribute-groups/{attributeGroupId}/users/attributes")
     public ResponseEntity<BaseResponse> createGroupAttributeForUser(
             @PathVariable Long attributeGroupId,
-            @PathVariable Long userId,
             @RequestBody UserAttributesRequest request) {
-
-        request.setUserId(userId);
 
         UserAttributesResponse response = userAttributeService.createGroupAttributeForUser(attributeGroupId, request);
         BaseResponse baseResponse = new BaseResponse(200, "Attribute successfully added to the user within the group", response);
         return ResponseEntity.ok(baseResponse);
+    }
+
+    @PostMapping("/add-attribute-for-multiple-users")
+    public ResponseEntity<BaseResponse> addAttributeForMultipleUsers(@RequestBody AddAttributeForMultipleUsersRequest request){
+        try {
+            List<UserAttributesResponse> responses = userAttributeService.addAttributeForMultipleUsers(request);
+            BaseResponse baseResponse = new BaseResponse(HttpStatus.OK.value(), "Successfully added attribute for multiple users.", responses);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        } catch (EntityNotFoundException e){
+            BaseResponse baseResponse = new BaseResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            BaseResponse baseResponse = new BaseResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error", null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // Cập nhật thuộc tính trong nhóm
@@ -68,17 +94,19 @@ public class UserAttributesController {
             @PathVariable Long attributeId,
             @RequestBody UpdateGroupAttributeRequest updateGroupAttributeRequest) {
 
-        UserAttributesResponse updatedAttribute = userAttributeService.updateGroupAtribute(attributeId, updateGroupAttributeRequest);
+        UserAttributesResponse updatedAttribute = userAttributeService.updateGroupAttribute(attributeId, updateGroupAttributeRequest);
         return ResponseEntity.ok(new BaseResponse(200, "Attribute successfully updated.", updatedAttribute));
     }
 
     // Cập nhật thuộc tính cho người dùng trong nhóm
-    @PutMapping("/attributeGroupId/users/userId/attributes/{attributeId}")
+    @PutMapping("/{attributeGroupId}/users/{userId}/attributes/{attributeId}")
     public ResponseEntity<BaseResponse> updateGroupAttributeForUser(
+            @PathVariable Long attributeGroupId,
+            @PathVariable Long userId,
             @PathVariable Long attributeId,
             @RequestBody UserAttributesRequest request) {
 
-        UserAttributesResponse updatedAttribute = userAttributeService.updateGroupAttributeForuser(attributeId, request);
+        UserAttributesResponse updatedAttribute = userAttributeService.updateGroupAttributeForuser(attributeGroupId, userId, attributeId, request);
         return ResponseEntity.ok(new BaseResponse(200, "Attribute for user successfully updated.", updatedAttribute));
     }
 

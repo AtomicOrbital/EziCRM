@@ -1,34 +1,56 @@
 package com.example.crm.payload.request;
 
-import java.util.Date;
+import com.example.crm.payload.response.RoleResponse;
+
+import java.time.LocalDate;
 
 public class UserRequest {
-    private String userName;
+    private String username;
+    private String address;
     private String password;
-    private String fullName;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String email;
     private String phone;
+
+    private Integer idRole;
 
 
     public UserRequest() {
     }
 
-    public UserRequest(String userName, String password, String fullName, Date dateOfBirth, String email, String phone) {
-        this.userName = userName;
+    public UserRequest(String username, String address, String password, LocalDate dateOfBirth, String email, String phone, Integer idRole) {
+        this.username = username;
+        this.address = address;
         this.password = password;
-        this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phone = phone;
+        this.idRole = idRole;
     }
 
-    public String getUserName() {
-        return userName;
+    public Integer getIdRole() {
+        return idRole;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setIdRole(Integer idRole) {
+        this.idRole = idRole;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getPassword() {
@@ -39,19 +61,11 @@ public class UserRequest {
         this.password = password;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

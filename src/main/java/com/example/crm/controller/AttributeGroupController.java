@@ -8,12 +8,14 @@ import com.example.crm.service.AttributeGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/attribute-groups")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AttributeGroupController {
     @Autowired
     private AttributeGroupService attributeGroupService;
