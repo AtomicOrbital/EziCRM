@@ -2,6 +2,8 @@ package com.example.crm.service.impl;
 
 import com.example.crm.entity.AttributeGroupEntity;
 import com.example.crm.payload.request.AttributeGroupRequest;
+import com.example.crm.payload.response.AttributeDetailResponse;
+import com.example.crm.payload.response.AttributeGroupDetailResponse;
 import com.example.crm.payload.response.AttributeGroupResponse;
 import com.example.crm.repository.AttributeGroupRepository;
 import com.example.crm.service.AttributeGroupService;
@@ -20,11 +22,31 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
     private AttributeGroupResponse convertToResponse(AttributeGroupEntity attributeGroupEntity){
         return new AttributeGroupResponse(attributeGroupEntity.getAttributeGroupId(), attributeGroupEntity.getName());
     }
+
+    private AttributeGroupDetailResponse convertDetailResponse(AttributeGroupEntity attributeGroupEntity){
+        AttributeGroupDetailResponse response = new AttributeGroupDetailResponse();
+        response.setAttributeGroupId(attributeGroupEntity.getAttributeGroupId());
+        response.setName(attributeGroupEntity.getName());
+        List<AttributeDetailResponse> attributeDetails = attributeGroupEntity.getUserAttributesEntitySet()
+                .stream()
+                .map(attr -> new AttributeDetailResponse(attr.getAttributeId(), attr.getName(), attr.getValue()))
+                .collect(Collectors.toList());
+        response.setAttributes(attributeDetails);
+        return response;
+    }
     @Override
     public List<AttributeGroupResponse> getAllAttributeGroup() {
         List<AttributeGroupEntity> attributeGroupEntities = attributeGroupRepository.findAll();
         return attributeGroupEntities.stream()
                 .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AttributeGroupDetailResponse> getAllAttributeGroupsWithDetails() {
+        List<AttributeGroupEntity> attributeGroupEntities = attributeGroupRepository.findAllWithAttributes();
+        return attributeGroupEntities.stream()
+                .map(this::convertDetailResponse)
                 .collect(Collectors.toList());
     }
 

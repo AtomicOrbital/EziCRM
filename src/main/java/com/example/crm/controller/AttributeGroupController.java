@@ -3,6 +3,7 @@ package com.example.crm.controller;
 import com.example.crm.entity.AttributeGroupEntity;
 import com.example.crm.payload.BaseResponse;
 import com.example.crm.payload.request.AttributeGroupRequest;
+import com.example.crm.payload.response.AttributeGroupDetailResponse;
 import com.example.crm.payload.response.AttributeGroupResponse;
 import com.example.crm.service.AttributeGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,22 @@ public class AttributeGroupController {
             baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             baseResponse.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(baseResponse);
+        }
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<?> getAllAttributesWithDetails(){
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            List<AttributeGroupDetailResponse> groupsWithDetails = attributeGroupService.getAllAttributeGroupsWithDetails();
+            baseResponse.setStatus(200);
+            baseResponse.setMessage("SUCCESS");
+            baseResponse.setData(groupsWithDetails);
+            return ResponseEntity.ok(baseResponse);
+        } catch (Exception e){
+            baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            baseResponse.setMessage(e.getMessage());
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
     }
 

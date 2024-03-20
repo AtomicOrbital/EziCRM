@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<UserResponse>> searchUsers(
+    public ResponseEntity<?> searchUsers(
         @RequestParam(value = "username", required = false) String username,
         @RequestParam(value = "address", required = false) String address,
         @RequestParam(value = "email", required = false) String email,
@@ -64,8 +64,18 @@ public class UserController {
         @RequestParam(value = "minAge", required = false) Integer minAge,
         @RequestParam(value = "maxAge", required = false) Integer maxAge
     ){
-        List<UserResponse> users = userService.searchUsers(username, address, email, phone, minAge, maxAge);
-        return ResponseEntity.ok(users);
+        try{
+            List<UserResponse> users = userService.searchUsers(username, address, email, phone, minAge, maxAge);
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setStatus(200);
+            baseResponse.setMessage("SUCCESS");
+            baseResponse.setData(users);
+
+            return ResponseEntity.ok(baseResponse);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi tìm kiếm : " + e.getMessage());
+        }
+
     }
 
     @PostMapping

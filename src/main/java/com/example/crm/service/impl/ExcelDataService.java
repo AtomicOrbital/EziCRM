@@ -32,6 +32,8 @@ public class ExcelDataService {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\d+$");
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z\\s]+$");
+    private static final Pattern ADDRESS_PATTERN = Pattern.compile("^[A-Za-z0-9\\s.,-/]+$");
+
 
     private static boolean isValidEmail(String email){
         return EMAIL_PATTERN.matcher(email).matches();
@@ -43,6 +45,13 @@ public class ExcelDataService {
 
     private static boolean isValidUsername(String username){
         return USERNAME_PATTERN.matcher(username).matches();
+    }
+
+    private static boolean isValidAddress(String address){
+        if(address == null || address.trim().isEmpty()){
+            return false;
+        }
+        return ADDRESS_PATTERN.matcher(address).matches();
     }
 
     public static boolean isValidExcelFile(MultipartFile file){
@@ -105,7 +114,12 @@ public class ExcelDataService {
                             }
                             break;
                         case 1:
-                            userEntity.setAddress(cellValue);
+                            if(!isValidAddress(cellValue)){
+                                System.err.println("Invalid address format: " + cellValue + " on row " + (row.getRowNum() + 1));
+                                isValidRow = false;
+                            } else {
+                                userEntity.setAddress(cellValue);
+                            }
                             break;
                         case 2:
                             if(!cellValue.trim().isEmpty()){
