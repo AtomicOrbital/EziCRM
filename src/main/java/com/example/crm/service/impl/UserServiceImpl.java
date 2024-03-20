@@ -85,19 +85,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse createUser(UserRequest userRequest) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(userRequest.getAddress());
-        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        userEntity.setUsername(userRequest.getUsername());
+//        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userEntity.setAddress(userRequest.getAddress());
         userEntity.setDateOfBirth(userRequest.getDateOfBirth());
         userEntity.setEmail(userRequest.getEmail());
         userEntity.setPhone(userRequest.getPhone());
         userEntity.setCreatedAt(new Date());
 
-        Integer roleId = Integer.valueOf(userRequest.getIdRole());
+//        Integer roleId = Integer.valueOf(userRequest.getIdRole());
 
-        RoleEntity roleEntity = roleRepository.findById(userRequest.getIdRole())
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
-        userEntity.setRole(roleEntity);
+//        RoleEntity roleEntity = roleRepository.findById(userRequest.getIdRole())
+//                    .orElseThrow(() -> new RuntimeException("Role not found"));
+//        userEntity.setRole(roleEntity);
 
 
         UserEntity savedUser = userRepository.save(userEntity);
@@ -109,14 +109,14 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userEntity.setUsername(userRequest.getAddress());
-        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+//        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userEntity.setAddress(userRequest.getAddress());
         userEntity.setDateOfBirth(userRequest.getDateOfBirth());
         userEntity.setEmail(userRequest.getEmail());
         userEntity.setPhone(userRequest.getPhone());
-        RoleEntity role = roleRepository.findById(userRequest.getIdRole())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        userEntity.setRole(role);
+//        RoleEntity role = roleRepository.findById(userRequest.getIdRole())
+//                .orElseThrow(() -> new RuntimeException("Role not found"));
+//        userEntity.setRole(role);
 
         UserEntity updatedUser = userRepository.save(userEntity);
         return mapToUserResponse(updatedUser);

@@ -15,4 +15,7 @@ public interface UserAttributesRepository extends JpaRepository<UserAttributesEn
     @Query("SELECT u FROM UserAttributesEntity u WHERE u.attributeGroupEntity.attributeGroupId = :groupId AND (:name IS NULL OR u.name LIKE %:name%)")
     List<UserAttributesEntity> findByGroupIdAndAttributeNameLike(@Param("groupId") Long groupId, @Param("name") String name);
     List<UserAttributesEntity> findByUserEntityUserId(Long userId);
+
+    @Query("SELECT u FROM UserAttributesEntity u WHERE u.attributeGroupEntity.attributeGroupId IN (:groupIds)")
+    List<UserAttributesEntity> findAllByAttributeGroupIdsIn(@Param("groupIds") List<Long> groupIds);
 }

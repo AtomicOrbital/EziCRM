@@ -85,9 +85,15 @@ public class UserController {
     }
 
     @PostMapping("/import-excel")
-    public ResponseEntity<?> importUsersFromExcel(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<?> importUsersFromExcel(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("attributeIds") List<Long> attributeIds
+    ){
+        if(!excelDataService.isValidExcelFile(file) || file.isEmpty()){
+            return ResponseEntity.badRequest().body("Invalid file format.");
+        }
         try {
-            excelDataService.saveUserToDatabase(file);
+            excelDataService.saveUserToDatabase(file, attributeIds);
             return ResponseEntity.ok().body("File has been uploaded and data stored successfully.");
         } catch (Exception e) {
             e.printStackTrace();

@@ -14,10 +14,10 @@ public class UserEntity {
     @Column(name = "userid") // Đảm bảo tên cột phản ánh chính xác cột trong DB
     private Long userId;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "address")
@@ -47,11 +47,14 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserGroupRelationsEntity> userGroupsGroupRelationsEntities;
 
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAttributesEntity> userAttributes = new ArrayList<>();
+
     public UserEntity() {
 
     }
 
-    public UserEntity(Long userId, String username, String password, String address, LocalDate dateOfBirth, String email, String phone, Date createdAt, Date updatedAt, RoleEntity role, List<UserGroupRelationsEntity> userGroupsGroupRelationsEntities) {
+    public UserEntity(Long userId, String username, String password, String address, LocalDate dateOfBirth, String email, String phone, Date createdAt, Date updatedAt, RoleEntity role, List<UserGroupRelationsEntity> userGroupsGroupRelationsEntities, List<UserAttributesEntity> userAttributes) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -63,6 +66,15 @@ public class UserEntity {
         this.updatedAt = updatedAt;
         this.role = role;
         this.userGroupsGroupRelationsEntities = userGroupsGroupRelationsEntities;
+        this.userAttributes = userAttributes;
+    }
+
+    public List<UserAttributesEntity> getUserAttributes() {
+        return userAttributes;
+    }
+
+    public void setUserAttributes(List<UserAttributesEntity> userAttributes) {
+        this.userAttributes = userAttributes;
     }
 
     public Long getUserId() {

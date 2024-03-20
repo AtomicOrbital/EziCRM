@@ -7,33 +7,23 @@ import java.time.LocalDate;
 public class UserRequest {
     private String username;
     private String address;
-    private String password;
+//    private String password;
     private LocalDate dateOfBirth;
     private String email;
     private String phone;
 
-    private Integer idRole;
+//    private Integer idRole;
 
 
     public UserRequest() {
     }
 
-    public UserRequest(String username, String address, String password, LocalDate dateOfBirth, String email, String phone, Integer idRole) {
+    public UserRequest(String username, String address, LocalDate dateOfBirth, String email, String phone) {
         this.username = username;
         this.address = address;
-        this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phone = phone;
-        this.idRole = idRole;
-    }
-
-    public Integer getIdRole() {
-        return idRole;
-    }
-
-    public void setIdRole(Integer idRole) {
-        this.idRole = idRole;
     }
 
     public String getUsername() {
@@ -44,21 +34,12 @@ public class UserRequest {
         this.username = username;
     }
 
-
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public LocalDate getDateOfBirth() {
