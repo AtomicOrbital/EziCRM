@@ -7,19 +7,19 @@ import java.time.LocalDate;
 
 public class UserSpecifications {
     public static Specification<UserEntity> hasUsername(String username) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("username"), username);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("username"), "%" + username + "%");
     }
 
     public static Specification<UserEntity> hasAddress(String address){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("address"), address);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("address"), "%" + address + "%");
     }
 
     public static Specification<UserEntity> hasEmail(String email){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("email"), email);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("email"), "%" + email + "%");
     }
 
     public static Specification<UserEntity> hasPhone(String phone){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("phone"), phone);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("phone"), "%" + phone + "%");
     }
     // Tìm nhưng người có tuổi lớn hơn
     public static Specification<UserEntity> isOlderThan(int age) {

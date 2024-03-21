@@ -3,13 +3,14 @@ package com.example.crm.repository;
 import com.example.crm.entity.UserAttributesEntity;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UserAttributesRepository extends JpaRepository<UserAttributesEntity, Long> {
+public interface UserAttributesRepository extends JpaRepository<UserAttributesEntity, Long>, JpaSpecificationExecutor<UserAttributesEntity> {
     List<UserAttributesEntity> findByAttributeGroupEntity_AttributeGroupId(Long attributeGroupId);
     List<UserAttributesEntity> findByUserEntity_UserIdAndAttributeGroupEntity_AttributeGroupId(Long userId, Long attributeGroupid);
     @Query("SELECT u FROM UserAttributesEntity u WHERE u.attributeGroupEntity.attributeGroupId = :groupId AND (:name IS NULL OR u.name LIKE %:name%)")

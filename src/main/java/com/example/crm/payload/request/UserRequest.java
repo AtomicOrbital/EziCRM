@@ -17,7 +17,7 @@ public class UserRequest {
     @DateOfBirthContraint
     private LocalDate dateOfBirth;
     @Email(message = "Email should be valid")
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email phải chứa dấu chấm")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email invalidate ")
     private String email;
     @Pattern(regexp = "^\\d+$", message = "Phone number must be numeric")
     private String phone;

@@ -1,5 +1,6 @@
 package com.example.crm.controller;
 
+import com.example.crm.entity.UserAttributesEntity;
 import com.example.crm.payload.BaseResponse;
 import com.example.crm.payload.request.AddAttributeForMultipleUsersRequest;
 import com.example.crm.payload.request.MultipleUserAttributesRequest;
@@ -47,9 +48,51 @@ public class UserAttributesController {
 
     @GetMapping("/{attributeGroupId}/users/{userId}/attributes")
     public ResponseEntity<BaseResponse> getGroupAttributeForUser(@PathVariable Long attributeGroupId, @PathVariable Long userId) {
-        List<UserAttributesResponse> attributesResponses = userAttributeService.getAttributesForUserInGroup(attributeGroupId, userId);
-        return ResponseEntity.ok(new BaseResponse(200, "Successfully fetched attributes for the user in the group.", attributesResponses));
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            List<UserAttributesResponse> attributesResponses = userAttributeService.getAttributesForUserInGroup(attributeGroupId, userId);
+            if (attributesResponses.isEmpty()) {
+                baseResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                baseResponse.setMessage("No attributes found for the given group ID");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(baseResponse);
+            }
+            baseResponse.setStatus(HttpStatus.OK.value());
+            baseResponse.setMessage("Successfully fetched attributes for the user in the group.");
+            baseResponse.setData(attributesResponses);
+            return ResponseEntity.ok(baseResponse);
+        }catch (Exception e){
+            baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            baseResponse.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(baseResponse);
+        }
     }
+
+    @GetMapping("/search/attributes")
+    public ResponseEntity<?> searchUserAttributes(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String value) {
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            List<UserAttributesResponse> results = userAttributeService.searchDynamicAttributes(name, value);
+            if (results.isEmpty()) {
+                baseResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                baseResponse.setMessage("Không tìm thấy kết quả phù hợp");
+                baseResponse.setData(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(baseResponse);
+            } else {
+                baseResponse.setStatus(HttpStatus.OK.value());
+                baseResponse.setMessage("SUCCESS");
+                baseResponse.setData(results);
+                return ResponseEntity.ok(baseResponse);
+            }
+        } catch (Exception e) {
+            baseResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            baseResponse.setMessage("Lỗi tìm kiếm: " + e.getMessage());
+            baseResponse.setData(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(baseResponse);
+        }
+    }
+
 
     @PostMapping("/attribute-groups/{attributeGroupId}/attributes")
     public ResponseEntity<BaseResponse> createAttribueInGroup(

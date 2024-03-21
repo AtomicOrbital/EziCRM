@@ -13,6 +13,7 @@ import com.example.crm.repository.UserAttributesRepository;
 import com.example.crm.repository.UserRepository;
 import com.example.crm.service.UserAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -50,6 +51,35 @@ public class UserAttributeServiceImpl implements UserAttributeService {
                     return response;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserAttributesResponse> searchDynamicAttributes(String name, String value) {
+        Specification<UserAttributesEntity> spec = Specification.where(null);
+
+        if(name != null && !name.isEmpty()){
+            spec = spec.and(UserAttributesSpecification.hasName(name));
+        }
+
+        if(value != null && !value.isEmpty()){
+            spec = spec.and(UserAttributesSpecification.hasValue(value));
+        }
+
+        List<UserAttributesEntity> userAttributesEntities = userAttributesRepository.findAll(spec);
+        List<UserAttributesResponse> userAttributesResponseList = new ArrayList<>();
+        for(UserAttributesEntity userAttributesEntity:userAttributesEntities){
+            UserAttributesResponse userAttributesResponse = new UserAttributesResponse();
+            userAttributesResponse.setAttributeId(userAttributesEntity.getAttributeId());
+            userAttributesResponse.setUserId(userAttributesEntity.getUserEntity().getUserId());
+            userAttributesResponse.setUserName(userAttributesEntity.getUserEntity().getUsername());
+            userAttributesResponse.setAttributeGroupId(userAttributesEntity.getAttributeGroupEntity().getAttributeGroupId());
+            userAttributesResponse.setGroupName(userAttributesEntity.getAttributeGroupEntity().getName());
+            userAttributesResponse.setAttributeName(userAttributesEntity.getName());
+            userAttributesResponse.setAttributeValue(userAttributesEntity.getValue());
+
+            userAttributesResponseList.add(userAttributesResponse);
+        }
+        return userAttributesResponseList;
     }
 
     @Override

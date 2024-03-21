@@ -1,5 +1,6 @@
 package com.example.crm.service;
 
+import com.example.crm.entity.UserAttributesEntity;
 import com.example.crm.payload.request.AddAttributeForMultipleUsersRequest;
 import com.example.crm.payload.request.MultipleUserAttributesRequest;
 import com.example.crm.payload.request.UpdateGroupAttributeRequest;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface UserAttributeService {
     List<UserAttributesResponse> getAttributesByGroupId(Long attributeGroupId);
-
+    List<UserAttributesResponse> searchDynamicAttributes(String name, String value);
     List<UserAttributesResponse> getAttributesForUserInGroup(Long userId,Long attributeId);
     UserAttributesResponse createGroupAttribute(Long attributeGroupId, UserAttributesRequest userAttributesRequest);
     UserAttributesResponse createGroupAttributeForUser(Long atributeGroupId, UserAttributesRequest userAttributesRequest);
