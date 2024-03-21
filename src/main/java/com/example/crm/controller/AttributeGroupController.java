@@ -13,8 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -93,8 +95,14 @@ public class AttributeGroupController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> createAttributeGroup(AttributeGroupRequest attributeGroupRequest){
+    public ResponseEntity<BaseResponse> createAttributeGroup(@Valid AttributeGroupRequest attributeGroupRequest, BindingResult bindingResult){
         BaseResponse baseResponse = new BaseResponse();
+        if(bindingResult.hasErrors()){
+            String errorMessgae = bindingResult.getFieldError().getDefaultMessage();
+            baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            baseResponse.setMessage(errorMessgae);
+            return ResponseEntity.badRequest().body(baseResponse);
+        }
         try {
             AttributeGroupResponse savedAttributeGroup = attributeGroupService.createAttributeGroup(attributeGroupRequest);
             baseResponse.setStatus(201);

@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpecificationExecutor<UserEntity> {
     UserEntity findByEmail(String email);
     Page<UserEntity> findAll(Pageable pageable);
-
+    Optional<UserEntity> findByPhone(String phone);
 }

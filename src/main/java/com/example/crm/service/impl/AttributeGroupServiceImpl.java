@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -56,7 +57,10 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
 
     @Override
     public Page<AttributeGroupDetailResponse> getAllGroupsAndAttributesWithPaging(Pageable pageable) {
-        Page<AttributeGroupEntity> attributeGroupEntityPage = attributeGroupRepository.findAllWithAttributesWithPaging(pageable);
+        // Tạo một đối tượng PageRequest có sắp xếp mặc định
+        Pageable sortedByGroupName = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by("attributeGroupId").ascending());
+        Page<AttributeGroupEntity> attributeGroupEntityPage = attributeGroupRepository.findAllWithAttributesWithPaging(sortedByGroupName);
         return attributeGroupEntityPage.map(this::convertDetailResponse);
     }
 

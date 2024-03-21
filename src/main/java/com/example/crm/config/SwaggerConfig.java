@@ -15,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableOpenApi
@@ -28,7 +29,9 @@ public class SwaggerConfig {
                 .build()
                 .apiInfo(apiInfo())
                 .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()));
+                .securitySchemes(Arrays.asList(apiKey()))
+                .consumes(Set.of("multipart/form-data")) // API được định nghĩa để chấp nhận multipart/form-data
+                .produces(Set.of("application/json")); // Định nghĩa loại content API trả về
         }
 
     private ApiKey apiKey() {

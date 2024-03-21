@@ -13,7 +13,7 @@ public class DateOfBirthValidator  implements ConstraintValidator<DateOfBirthCon
 
     @Override
     public boolean isValid(LocalDate dateOfBirth, ConstraintValidatorContext constraintValidatorContext) {
-        // Ngày  sinh ko được lơn hơn ngày hiện tại
+        // Ngày sinh ko được lơn hơn ngày hiện tại
         return dateOfBirth.isBefore(LocalDate.now()) || dateOfBirth.isEqual(LocalDate.now());
     }
 }

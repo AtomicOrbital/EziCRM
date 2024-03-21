@@ -25,9 +25,25 @@ public class UserAttributesController {
 
     @GetMapping("/attributes/{attributeGroupId}")
     public ResponseEntity<BaseResponse> getAttributesByGroupId(@PathVariable Long attributeGroupId){
-        List<UserAttributesResponse> attributesResponses = userAttributeService.getAttributesByGroupId(attributeGroupId);
-        return ResponseEntity.ok(new BaseResponse(200, "Successfully fetched attributes for the group", attributesResponses));
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            List<UserAttributesResponse> attributesResponses = userAttributeService.getAttributesByGroupId(attributeGroupId);
+            if (attributesResponses.isEmpty()) {
+                baseResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                baseResponse.setMessage("No attributes found for the given group ID");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(baseResponse);
+            }
+            baseResponse.setStatus(HttpStatus.OK.value());
+            baseResponse.setMessage("SUCCESS");
+            baseResponse.setData(attributesResponses);
+            return ResponseEntity.ok(baseResponse);
+        } catch (Exception e) {
+            baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            baseResponse.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(baseResponse);
+        }
     }
+
 
     @GetMapping("/{attributeGroupId}/users/{userId}/attributes")
     public ResponseEntity<BaseResponse> getGroupAttributeForUser(@PathVariable Long attributeGroupId, @PathVariable Long userId) {

@@ -26,18 +26,18 @@ public class UserEntity {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "phone")
     private String phone;
 
     @Column(name = "created_at",nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column(name = "updated_at",nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     @ManyToOne
@@ -164,7 +164,16 @@ public class UserEntity {
     public void setRole(RoleEntity role) {
         this.role = role;
     }
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date(); // Thiết lập thời gian hiện tại khi entity được tạo
+//        updatedAt = createdAt;  // updatedAt sẽ giống như createdAt
+    }
 
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date(); // Cập nhật thời gian hiện tại khi entity được cập nhật
+    }
 
 }
 

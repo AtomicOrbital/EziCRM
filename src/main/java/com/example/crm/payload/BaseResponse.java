@@ -1,9 +1,12 @@
 package com.example.crm.payload;
 
+import java.util.Map;
+
 public class BaseResponse {
     private int status;
     private String message;
     private Object data;
+
 
     public BaseResponse() {
     }

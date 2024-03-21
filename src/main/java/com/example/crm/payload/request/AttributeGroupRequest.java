@@ -1,6 +1,9 @@
 package com.example.crm.payload.request;
 
+import javax.validation.constraints.NotBlank;
+
 public class AttributeGroupRequest {
+    @NotBlank(message = "group name cannot be empty")
     private String name;
 
     public AttributeGroupRequest() {
