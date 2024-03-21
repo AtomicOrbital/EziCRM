@@ -99,14 +99,13 @@ public class UserAttributesController {
     }
 
     // Cập nhật thuộc tính cho người dùng trong nhóm
-    @PutMapping("/{attributeGroupId}/users/{userId}/attributes/{attributeId}")
+    @PutMapping("/{attributeGroupId}/users/attributes/{attributeId}")
     public ResponseEntity<BaseResponse> updateGroupAttributeForUser(
             @PathVariable Long attributeGroupId,
-            @PathVariable Long userId,
             @PathVariable Long attributeId,
             @RequestBody UserAttributesRequest request) {
 
-        UserAttributesResponse updatedAttribute = userAttributeService.updateGroupAttributeForuser(attributeGroupId, userId, attributeId, request);
+        UserAttributesResponse updatedAttribute = userAttributeService.updateGroupAttributeForuser(attributeGroupId, attributeId, request);
         return ResponseEntity.ok(new BaseResponse(200, "Attribute for user successfully updated.", updatedAttribute));
     }
 

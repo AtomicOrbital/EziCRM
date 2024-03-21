@@ -8,6 +8,9 @@ import com.example.crm.payload.response.AttributeGroupResponse;
 import com.example.crm.repository.AttributeGroupRepository;
 import com.example.crm.service.AttributeGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,6 +25,7 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
     private AttributeGroupResponse convertToResponse(AttributeGroupEntity attributeGroupEntity){
         return new AttributeGroupResponse(attributeGroupEntity.getAttributeGroupId(), attributeGroupEntity.getName());
     }
+
 
     private AttributeGroupDetailResponse convertDetailResponse(AttributeGroupEntity attributeGroupEntity){
         AttributeGroupDetailResponse response = new AttributeGroupDetailResponse();
@@ -49,6 +53,13 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
                 .map(this::convertDetailResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<AttributeGroupDetailResponse> getAllGroupsAndAttributesWithPaging(Pageable pageable) {
+        Page<AttributeGroupEntity> attributeGroupEntityPage = attributeGroupRepository.findAllWithAttributesWithPaging(pageable);
+        return attributeGroupEntityPage.map(this::convertDetailResponse);
+    }
+
 
     @Override
     public AttributeGroupResponse getAttributeGroupById(Long id) {

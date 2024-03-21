@@ -5,14 +5,22 @@ import com.example.crm.payload.request.UserRequest;
 import com.example.crm.payload.response.UserResponse;
 import com.example.crm.service.UserService;
 import com.example.crm.service.impl.ExcelDataService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -38,6 +46,37 @@ public class UserController {
             return ResponseEntity.badRequest().body(baseResponse);
         }
     }
+
+    @GetMapping("/users/pageable")
+    public ResponseEntity<?> getAllUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+//            @RequestParam(value = "sort", defaultValue = "userId,asc") String[] sort
+    ){
+//        Sort sortParams = Sort.by(Arrays.stream(sort)
+//                .map(sortStr -> {
+//                    String[] s = sortStr.split(",");
+//                    return new Sort.Order(Sort.Direction.fromString(s[1]), s[0]);
+//                })
+//                .collect(Collectors.toList()));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserResponse> userResponses = userService.getAllUsers(pageable);
+
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            baseResponse.setStatus(200);
+            baseResponse.setMessage("Users fetched successfully");
+            baseResponse.setData(userResponses);
+            return ResponseEntity.ok(baseResponse);
+        }catch (Exception e){
+            baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            baseResponse.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(baseResponse);
+        }
+
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse> getUserById(@PathVariable Long id){
@@ -79,7 +118,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> createUser(@RequestBody UserRequest userRequest){
+    public ResponseEntity<BaseResponse> createUser(@Valid @RequestBody UserRequest userRequest){
         BaseResponse baseResponse = new BaseResponse();
         try {
             UserResponse userResponse = userService.createUser(userRequest);

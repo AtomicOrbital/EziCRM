@@ -7,6 +7,9 @@ import com.example.crm.payload.response.AttributeGroupDetailResponse;
 import com.example.crm.payload.response.AttributeGroupResponse;
 import com.example.crm.service.AttributeGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +50,26 @@ public class AttributeGroupController {
             baseResponse.setData(groupsWithDetails);
             return ResponseEntity.ok(baseResponse);
         } catch (Exception e){
+            baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            baseResponse.setMessage(e.getMessage());
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/details-with-paging")
+    public ResponseEntity<?> getAllGroupsAndAttributesWithPaging(
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size
+    ){
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<AttributeGroupDetailResponse> attributeGroupDetailResponses = attributeGroupService.getAllGroupsAndAttributesWithPaging(pageable);
+            baseResponse.setStatus(200);
+            baseResponse.setMessage("SUCCESS");
+            baseResponse.setData(attributeGroupDetailResponses);
+            return ResponseEntity.ok(baseResponse);
+        }catch (Exception e){
             baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             baseResponse.setMessage(e.getMessage());
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

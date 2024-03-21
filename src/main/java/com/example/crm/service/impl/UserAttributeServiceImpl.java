@@ -172,7 +172,7 @@ public class UserAttributeServiceImpl implements UserAttributeService {
 
 
     @Override
-    public UserAttributesResponse updateGroupAttributeForuser(Long attributeGroupId,Long userId,Long attributeId, UserAttributesRequest request) {
+    public UserAttributesResponse updateGroupAttributeForuser(Long attributeGroupId,Long attributeId, UserAttributesRequest request) {
         UserAttributesEntity attribute = userAttributesRepository.findById(attributeId)
                 .orElseThrow(() -> new EntityNotFoundException("Attribute not found with id: " + attributeId));
 

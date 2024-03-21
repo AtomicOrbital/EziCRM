@@ -10,6 +10,9 @@ import com.example.crm.repository.UserRepository;
 import com.example.crm.service.UserService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -82,8 +85,12 @@ public class UserServiceImpl implements UserService {
         return mapToUserResponse(userEntity);
     }
 
+    public boolean emailExists(String email){
+        return userRepository.findByEmail(email) != null;
+    }
+
     @Override
-    public UserResponse createUser(UserRequest userRequest) {
+    public UserResponse createUser(UserRequest userRequest) throws Exception {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(userRequest.getUsername());
 //        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -98,17 +105,20 @@ public class UserServiceImpl implements UserService {
 //        RoleEntity roleEntity = roleRepository.findById(userRequest.getIdRole())
 //                    .orElseThrow(() -> new RuntimeException("Role not found"));
 //        userEntity.setRole(roleEntity);
-
+        // Email must unique
+        if(emailExists(userEntity.getEmail())){
+            throw new Exception("Email already exists");
+        }
 
         UserEntity savedUser = userRepository.save(userEntity);
         return mapToUserResponse(savedUser);
     }
 
     @Override
-    public UserResponse updatedUser(Long id, UserRequest userRequest) {
+    public UserResponse updatedUser(Long id, UserRequest userRequest) throws Exception {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        userEntity.setUsername(userRequest.getAddress());
+        userEntity.setUsername(userRequest.getUsername());
 //        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userEntity.setAddress(userRequest.getAddress());
         userEntity.setDateOfBirth(userRequest.getDateOfBirth());
@@ -117,6 +127,9 @@ public class UserServiceImpl implements UserService {
 //        RoleEntity role = roleRepository.findById(userRequest.getIdRole())
 //                .orElseThrow(() -> new RuntimeException("Role not found"));
 //        userEntity.setRole(role);
+        if(emailExists(userEntity.getEmail())){
+            throw new Exception("Email already exists");
+        }
 
         UserEntity updatedUser = userRepository.save(userEntity);
         return mapToUserResponse(updatedUser);
@@ -161,4 +174,11 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> users = userRepository.findAll(spec);
         return users.stream().map(this::mapToUserResponse).collect(Collectors.toList());
     }
+
+    @Override
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        Page<UserEntity> userEntitiesPage = userRepository.findAll(pageable);
+        return userEntitiesPage.map(this::mapToUserResponse);
+    }
+
 }

@@ -16,7 +16,7 @@ public interface UserAttributeService {
     UserAttributesResponse createGroupAttributeForUser(Long atributeGroupId, UserAttributesRequest userAttributesRequest);
     List<UserAttributesResponse> createMultipleGroupAttributes(Long attributeGroupId, MultipleUserAttributesRequest request);
     UserAttributesResponse updateGroupAttribute(Long id, UpdateGroupAttributeRequest updateGroupAttributeRequest);
-    UserAttributesResponse updateGroupAttributeForuser(Long attributeGroupId,Long userId,Long attributeId, UserAttributesRequest userAttributesRequest);
+    UserAttributesResponse updateGroupAttributeForuser(Long attributeGroupId,Long userId,UserAttributesRequest userAttributesRequest);
     List<UserAttributesResponse> addAttributeForMultipleUsers(AddAttributeForMultipleUsersRequest request);
     void deleteUserAttrribute(Long attributeId);
 }
